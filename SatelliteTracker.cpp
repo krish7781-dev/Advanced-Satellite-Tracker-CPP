@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 using namespace std;
 
 
@@ -106,12 +107,28 @@ class SpySatellite : public Satellite{
 
 };
 
+void logmissiondata(string message){
+    //ofstream creates  a file writer object that can be used to write data to a file. The constructor of ofstream takes the name of the file as an argument and opens it for writing. If the file does not exist, it will be created. If it already exists, it will be overwritten.
+    //ios::app is a flag that tells the ofstream to open the file in append mode, which means that new data will be added to the end of the file instead of overwriting it.
+    std::ofstream logger("mission control log",std::ios::app);
+
+    if(logger.is_open()){
+        logger<<"[LOG]:"<<message<<std::endl; //writing the log message to the file with a timestamp
+        logger.close(); //closing the file after writing to it
+    }
+
+}
+
+
 void MissionController(SpaceObject *obj)
 {
     cout<<"---Mission Control Interface---"<<endl;
+    logmissiondata("Diagonistic check initiated for Space Object"); //Logging the mission data with a message indicating that a diagnostic check has been initiated for a space object. This will help in keeping track of the operations performed on the space objects and can be useful for debugging and analysis purposes.
     obj->performChecking(); //This will call the performChecking function of the derived class (Satellite or SpaceStation) because of dynamic dispatch, even though we are using a pointer of type SpaceObject, it will call the overridden function in the derived class at runtime.
     cout<<"--------End of Mission Control Report--------"<<endl;
 }
+
+
 
 
 int main(){
